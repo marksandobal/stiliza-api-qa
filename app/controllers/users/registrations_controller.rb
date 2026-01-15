@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Users::RegistrationsController < Devise::RegistrationsController
-  # before_action :configure_sign_up_params, only: [:create]
+  before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
@@ -11,18 +11,29 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    build_resource(sign_up_params)
+    ActiveRecord::Base.transaction do
+      build_resource(sign_up_params.except(:company_attributes, :role))
+      resource.save!
 
-    resource.save
-    if resource.persisted?
-      render json: {
-        message: 'Usuario creado correctamente'
-      }, status: :created
-    else
-      render json: {
-        errors: resource.errors.full_messages
-      }, status: :unprocessable_entity
+      company_params = params[:user][:company_attributes]
+
+      if company_params.present?
+        company = Company.find_or_create_by(name: company_params[:name])
+
+        CompanyUser.create!(
+          user: resource,
+          company: company,
+          role: sign_up_params[:role].downcase.to_sym
+        )
+      end
+
+      UserMailer.verification_email(resource).deliver_later
+      render json: { message: "User created successfully" }, status: :created
     end
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  rescue ArgumentError => e
+    render json: { errors: [e.message] }, status: :unprocessable_entity
   end
 
   # GET /resource/edit
@@ -52,9 +63,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # protected
 
   # If you have extra params to permit, append them to the sanitizer.
-  # def configure_sign_up_params
-  #   devise_parameter_sanitizer.permit(:sign_up, keys: [:attribute])
-  # end
+  def configure_sign_up_params
+    devise_parameter_sanitizer.permit(:sign_up, keys: [
+      :name, :last_name, :second_last_name, :company, :gender, :role,
+      user_profile_attributes: [:name, :last_name, :second_last_name, :gender],
+      company_attributes: [:name]
+    ])
+  end
 
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_account_update_params

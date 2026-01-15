@@ -1,0 +1,292 @@
+openapi: 3.0.1
+info:
+  title: STILIZA API V1
+  version: v1
+  description: "Api documentation from stiliza with JWT"
+paths:
+  /signup:
+    post:
+      summary: Creates a new user
+      tags:
+      - Registrations
+      requestBody:
+        $ref: '#/components/requestBodies/UserSignUp'
+      responses:
+        '200':
+          description: User created successfully
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /login:
+    post:
+      summary: Logs in a user
+      tags:
+      - Sessions
+      requestBody:
+        $ref: '#/components/requestBodies/UserLogin'
+      responses:
+        '200':
+          description: User logged in successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /logout:
+    delete:
+      summary: Logs out a user
+      tags:
+      - Sessions
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: User logged out successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /password:
+    post:
+      summary: Sends password reset instructions
+      tags:
+      - Passwords
+      requestBody:
+        $ref: '#/components/requestBodies/PasswordResetRequest'
+      responses:
+        '200':
+          description: Password reset instructions sent successfully
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+    put:
+      summary: Resets user password
+      tags:
+      - Passwords
+      requestBody:
+        $ref: '#/components/requestBodies/PasswordReset'
+      responses:
+        '200':
+          description: Password reset successfully
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /users/verification:
+    post:
+      summary: Verifies a user account
+      tags:
+      - Verification
+      requestBody:
+        $ref: '#/components/requestBodies/UserVerification'
+      responses:
+        '200':
+          description: User verified successfully
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /users/resend_verification:
+    post:
+      summary: Resends verification email
+      tags:
+      - Verification
+      requestBody:
+        $ref: '#/components/requestBodies/ResendVerification'
+      responses:
+        '200':
+          description: Verification email resent successfully
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+servers:
+- url: https://www.example.com
+  variables:
+    defaultHost:
+      default: www.example.com
+      description: Staging server
+- url: http://localhost:3000
+  variables:
+    defaultHost:
+      default: localhost:3000
+      description: Local server
+- url: http://192.168.68.120:3000
+  variables:
+    defaultHost:
+      default: 192.168.68.120:3000
+      description: Network server
+
+components:
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      required:
+      - email
+      - password
+      - password_confirmation
+      - role
+      properties:
+        email:
+          type: string
+          example: user@mail.com
+        password:
+          type: string
+          example: "123456789"
+        password_confirmation:
+          type: string
+          example: "123456789"
+        role:
+          type: string
+          enum: ["admin", "user"]
+          example: "admin"
+    UserProfile:
+      type: object
+      required:
+      - name
+      - last_name
+      - gender
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        last_name:
+          type: string
+          example: "Doe"
+        second_last_name:
+          type: string
+          example: "Swit"
+        gender:
+          type: string
+          enum: ["male", "female"]
+          example: "male"
+        birth_date:
+          type: string
+          example: "2026-01-02"
+    Company:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Name Company"
+    Error:
+      type: object
+      properties:
+        errors:
+          type: object
+
+  requestBodies:
+    UserSignUp:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    example: user@mail.com
+                  password:
+                    type: string
+                    example: "123456789"
+                  password_confirmation:
+                    type: string
+                    example: "123456789"
+                  role:
+                    type: string
+                    enum: ["admin", "user"]
+                    example: "admin"
+                  user_profile_attributes:
+                    $ref: '#/components/schemas/UserProfile'
+                  company_attributes:
+                    $ref: '#/components/schemas/Company'
+    UserLogin:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    example: user@mail.com
+                  password:
+                    type: string
+                    example: "123456789"
+    PasswordResetRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    example: user@mail.com
+    PasswordReset:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    example: user@mail.com
+                  reset_password_token:
+                    type: string
+                  password:
+                    type: string
+                  password_confirmation:
+                    type: string
+    UserVerification:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: user@mail.com
+              code:
+                type: string
+                example: 123456
+    ResendVerification:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                example: user@mail.com
+
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+security:
+- bearer_auth: []

@@ -9,9 +9,19 @@ class Users::SessionsController < Devise::SessionsController
   # end
 
   # POST /resource/sign_in
-  # def create
-  #   super
-  # end
+  def create
+    self.resource = warden.authenticate(auth_options)
+
+    unless resource
+      return render json: { error: "Invalid credentials" }, status: :unauthorized
+    end
+
+    sign_in(resource_name, resource)
+
+    render json: resource, serializer: Api::V1::UserSerializer, meta: {
+      message: "Login successful"
+    },  status: :ok
+  end
 
   # DELETE /resource/sign_out
   # def destroy

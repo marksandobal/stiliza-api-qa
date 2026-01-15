@@ -55,7 +55,16 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: ENV.fetch("DOMAIN_WEB_HOST"), protocol: 'https' }
+  config.action_mailer.default_url_options = { host: ENV.fetch("DOMAIN_HOST"), protocol: "https" }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com",
+    port: 587,
+    user_name: ENV.fetch("USER_MAILER_SENDER"),
+    password: ENV.fetch("USER_MAILER_PASSWORD"),
+    authentication: "plain",
+    enable_starttls_auto: true
+  }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {

@@ -33,14 +33,23 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
-# gem "rack-cors"
+gem "rack-cors"
 
 # Authentication solution for Rails with Warden [https://github.com/heartcombo/devise]
-gem 'devise'
-gem 'devise-jwt'
+gem "devise"
+gem "devise-jwt"
+
+# Serializer json data
+gem "active_model_serializers"
+
+# Documentation Swagger
+gem "rswag-api"
+gem "rswag-ui"
 
 group :development, :test do
-  gem 'dotenv-rails'
+  gem "dotenv-rails"
+  gem "pry"
+  gem "pry-rails"
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
@@ -52,4 +61,12 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+end
+
+group :test do
+  gem "rspec-rails", "~> 7.0"
+  gem "factory_bot_rails"
+  gem "faker"
+  gem "shoulda-matchers", "~> 6.0"
+  gem "json_spec"
 end

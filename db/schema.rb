@@ -10,9 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_24_010544) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_13_035153) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "companies", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.string "name"
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "company_users", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "role", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["company_id"], name: "index_company_users_on_company_id"
+    t.index ["user_id", "company_id"], name: "index_company_users_on_user_id_and_company_id", unique: true
+    t.index ["user_id"], name: "index_company_users_on_user_id"
+  end
 
   create_table "jwt_denylists", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -20,6 +38,18 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_24_010544) do
     t.string "jti"
     t.datetime "updated_at", null: false
     t.index ["jti"], name: "index_jwt_denylists_on_jti"
+  end
+
+  create_table "user_profiles", force: :cascade do |t|
+    t.date "birth_date"
+    t.datetime "created_at", null: false
+    t.integer "gender", default: 0, null: false
+    t.string "last_name", null: false
+    t.string "name", null: false
+    t.string "second_last_name"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_user_profiles_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -38,8 +68,16 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_24_010544) do
     t.integer "sign_in_count", default: 0, null: false
     t.string "unlock_token"
     t.datetime "updated_at", null: false
+    t.string "verification_code"
+    t.datetime "verification_sent_at"
+    t.boolean "verified", default: false
+    t.datetime "verified_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
+
+  add_foreign_key "company_users", "companies"
+  add_foreign_key "company_users", "users"
+  add_foreign_key "user_profiles", "users", on_delete: :cascade
 end
