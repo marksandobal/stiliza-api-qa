@@ -1,0 +1,11 @@
+# Este archivo se utiliza en el entorno de CI (GitHub Actions) para configurar
+# la base de datos de pruebas. Se copia a config/database.yml durante el setup.
+# No modifica ni altera el archivo original de config/database.yml para los ambientes de desarrollo y producción
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: test        # coincide con POSTGRES_DB
+  username: postgres    # coincide con POSTGRES_USER
+  password: postgres    # coincide con POSTGRES_PASSWORD
+  host: localhost
+  port: 5432

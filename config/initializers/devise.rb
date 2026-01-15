@@ -312,7 +312,12 @@ Devise.setup do |config|
   config.sign_in_after_change_password = false
 
   config.jwt do |jwt|
-    jwt.secret = Rails.application.credentials.fetch(:secret_key_base)
+    jwt.secret = if Rails.env.test? || Rails.env.ci?
+      ENV["SECRET_KEY_BASE"] # valor fijo para tests/CI
+    else
+      Rails.application.credentials.fetch(:secret_key_base)
+    end
+
     jwt.dispatch_requests = [
       ["POST", %r{^/login$}],
       ["POST", %r{^/signup$}]

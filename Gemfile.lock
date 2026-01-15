@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    action_text-trix (2.1.15)
+    action_text-trix (2.1.16)
       railties
     actioncable (8.1.1)
       actionpack (= 8.1.1)
@@ -87,7 +87,7 @@ GEM
     bigdecimal (4.0.1)
     bootsnap (1.20.0)
       msgpack (~> 1.2)
-    brakeman (7.1.1)
+    brakeman (7.1.2)
       racc
     builder (3.3.0)
     bundler-audit (0.9.3)
@@ -298,7 +298,7 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.3.1)
-    rdoc (7.0.3)
+    rdoc (7.1.0)
       erb
       psych (>= 4.0.0)
       tsort
@@ -433,7 +433,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers
   bootsnap
-  brakeman
+  brakeman (~> 7.1.2)
   bundler-audit
   debug
   devise
