@@ -75,7 +75,7 @@ rails server
 
 Luego, abre tu navegador y visita la siguiente URL:
 
-[http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+[https://stiliza-api-qa.onrender.com/api-docs](https://stiliza-api-qa.onrender.com/api-docs)
 
 Encontrarás todos los endpoints, modelos y podrás probar la API directamente desde la interfaz de Swagger.
 
@@ -83,21 +83,20 @@ Encontrarás todos los endpoints, modelos y podrás probar la API directamente d
 El proyecto sigue la estructura convencional de una aplicación Ruby on Rails, con algunas adiciones clave:
 stiliza-api/
 ├── app/
-│   ├──` controllers/  `# Controladores de la aplicación, incluyendo Devise y API.
-│   ├──` models/       `# Modelos de Active Record.
-│   ├──` serializers/  `# Serializers para formatear las respuestas JSON.
-│   └──` jobs/         `# Trabajos en segundo plano (si aplica).
+│ ├── controllers/ # Controladores de la aplicación, incluyendo Devise y API.
+│ ├── models/ # Modelos de Active Record.
+│ ├── serializers/ # Serializers para formatear las respuestas JSON.
+│ └── jobs/ # Trabajos en segundo plano (si aplica).
 ├── config/
-│   ├── `routes.rb`     # Definición de rutas de la API.
-│   └──` initializers/ `# Configuraciones de Devise, Rswag, etc.
+│ ├── routes.rb # Definición de rutas de la API.
+│ └── initializers/ # Configuraciones de Devise, Rswag, etc.
 ├── db/
-│   ├──` migrate/      `# Migraciones de la base de datos.
-│   └── `schema.rb`     # Esquema actual de la base de datos.
-├──` spec/             `# Pruebas RSpec.
-│   ├──` request/      `# Pruebas de integración para los endpoints.
-│   └──` factories/    `# Factorías para crear objetos de prueba.
-└──` swagger/          `# Archivos generados por Rswag.
-
+│ ├── migrate/ # Migraciones de la base de datos.
+│ └── schema.rb # Esquema actual de la base de datos.
+├── spec/ # Pruebas RSpec.
+│ ├── request/ # Pruebas de integración para los endpoints.
+│ └── factories/ # Factorías para crear objetos de prueba.
+└── swagger/ # Archivos generados por Rswag.
 
 ## 📚 Recursos Adicionales
 [Documentación de Ruby on Rails](https://guides.rubyonrails.org/)

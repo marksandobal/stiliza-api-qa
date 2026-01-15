@@ -94,21 +94,16 @@ paths:
           $ref: '#/components/responses/UnprocessableEntity'
 
 servers:
-- url: https://www.example.com
+- url: https://stiliza-api-qa.onrender.com
   variables:
     defaultHost:
-      default: www.example.com
+      default: stiliza-api-qa.onrender.com
       description: Staging server
 - url: http://localhost:3000
   variables:
     defaultHost:
       default: localhost:3000
       description: Local server
-- url: http://192.168.68.120:3000
-  variables:
-    defaultHost:
-      default: 192.168.68.120:3000
-      description: Network server
 
 components:
   securitySchemes:
