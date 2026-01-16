@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Users::SessionsController < Devise::SessionsController
+  respond_to :json
+
+  # Deshabilitar callback que falla en API-only
+  skip_before_action :verify_signed_out_user, only: :destroy
   # before_action :configure_sign_in_params, only: [:create]
 
   # GET /resource/sign_in
@@ -24,9 +28,12 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   # DELETE /resource/sign_out
-  # def destroy
-  #   super
-  # end
+  def destroy
+    # Devise-JWT invalida el token vía Warden
+    sign_out(resource_name)
+
+    render json: { message: "Logged out successfully" }, status: :ok
+  end
 
   # protected
 
