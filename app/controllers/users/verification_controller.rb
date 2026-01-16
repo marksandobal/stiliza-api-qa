@@ -21,7 +21,7 @@ class Users::VerificationController < ApplicationController
     if user && !user.verified
       user.generate_verification_code
       user.save!
-      UserMailer.verification_email(user).deliver_later
+      UserMailer.verification_email(user).deliver_now
       render json: { message: "A new verification code has been sent." }, status: :ok
     else
       render json: { error: "User not found or already verified." }, status: :unprocessable_entity

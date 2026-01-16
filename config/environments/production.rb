@@ -33,6 +33,9 @@ Rails.application.configure do
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [ :request_id ]
   config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    config.logger = ActiveSupport::TaggedLogging.logger(STDOUT)
+  end
 
   # Change to "debug" to log everything (including potentially personally-identifiable information!).
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
@@ -52,17 +55,17 @@ Rails.application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: ENV.fetch("DOMAIN_HOST"), protocol: "https" }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",
-    port: 587,
+    port: 2525,
     user_name: ENV.fetch("USER_MAILER_SENDER"),
     password: ENV.fetch("USER_MAILER_PASSWORD"),
-    authentication: "plain",
+    authentication: :plain,
     enable_starttls_auto: true
   }
 

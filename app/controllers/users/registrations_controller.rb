@@ -27,7 +27,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         )
       end
 
-      UserMailer.verification_email(resource).deliver_later
+      UserMailer.verification_email(resource).deliver_now
       render json: { message: "User created successfully" }, status: :created
     end
   rescue ActiveRecord::RecordInvalid => e

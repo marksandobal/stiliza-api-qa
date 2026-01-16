@@ -51,7 +51,7 @@ class User < ApplicationRecord
 
   def handle_security_updates
     invalidate_jwt
-    UserMailer.password_changed(self).deliver_later
+    UserMailer.password_changed(self).deliver_now
   end
 
 
