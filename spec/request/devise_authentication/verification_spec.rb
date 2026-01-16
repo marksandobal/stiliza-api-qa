@@ -200,12 +200,12 @@ RSpec.describe 'Users::Verification', type: :request do
         expect(user.verification_sent_at).to be > old_timestamp
       end
 
-      it 'queues a verification email' do
+      it 'sends a verification email' do
         expect {
           post '/users/resend_verification', params: {
             email: user.email
           }, as: :json
-        }.to have_enqueued_job(ActionMailer::MailDeliveryJob)
+        }.to change { ActionMailer::Base.deliveries.count }.by(1)
       end
     end
 

@@ -59,16 +59,22 @@ Rails.application.configure do
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: ENV.fetch("DOMAIN_HOST"), protocol: "https" }
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address: ENV.fetch("SMTP_HOST"),
-    port: ENV.fetch("SMTP_PORT").to_i,
-    user_name: ENV.fetch("USER_MAILER_SENDER"),
-    password: ENV.fetch("USER_MAILER_PASSWORD"),
-    authentication: :plain,
-    domain: ENV.fetch("DOMAIN_HOST"),
-    enable_starttls_auto: true
+  config.action_mailer.delivery_method = :resend
+  config.action_mailer.resend_settings = {
+    api_key: ENV.fetch("RESEND_API_KEY")
   }
+  config.action_mailer.default_options = {
+    from: ENV.fetch("MAILER_SENDER")
+  }
+  # config.action_mailer.smtp_settings = {
+  #   address: ENV.fetch("SMTP_HOST"),
+  #   port: ENV.fetch("SMTP_PORT").to_i,
+  #   user_name: ENV.fetch("USER_MAILER_SENDER"),
+  #   password: ENV.fetch("USER_MAILER_PASSWORD"),
+  #   authentication: :plain,
+  #   domain: ENV.fetch("DOMAIN_HOST"),
+  #   enable_starttls_auto: true
+  # }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {

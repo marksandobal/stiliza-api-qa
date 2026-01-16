@@ -62,11 +62,10 @@ RSpec.describe 'Users::Registrations', type: :request do
         expect(company_user.role).to eq('admin')
       end
 
-      it 'queues a verification email' do
+      it 'sends a verification email' do
         expect {
           post '/signup', params: valid_attributes, as: :json
-        }.to have_enqueued_job(ActionMailer::MailDeliveryJob)
-          .with('UserMailer', 'verification_email', 'deliver_now', { args: [User] })
+        }.to change { ActionMailer::Base.deliveries.count }.by(1)
       end
 
       it 'returns a success message' do

@@ -46,6 +46,9 @@ gem "active_model_serializers"
 gem "rswag-api"
 gem "rswag-ui"
 
+# resend gem form handle email sending
+gem "resend"
+
 group :development, :test do
   gem "dotenv-rails"
   gem "pry"

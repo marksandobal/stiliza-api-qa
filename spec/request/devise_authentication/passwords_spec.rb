@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Users::Passwords', type: :request do
-  let!(:user) { create(:user, :verified) }
+  let!(:user) { create(:user, :verified, :with_profile) }
 
   describe 'POST /password' do
     context 'with valid email' do

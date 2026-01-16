@@ -9,6 +9,6 @@ class UserProfile < ApplicationRecord
   validates :gender, inclusion: { in: genders.keys }
 
   def full_name
-    "#{name} #{last_name} #{second_last_name}".strip!
+    "#{name} #{last_name} #{second_last_name}".strip
   end
 end
