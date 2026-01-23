@@ -54,8 +54,6 @@ class User < ApplicationRecord
     UserMailer.password_changed(self).deliver_now
   end
 
-
-
   def invalidate_jwt
     update_column(:updated_at, Time.current)
   end

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Users::Verification', type: :request do
   let(:user) { create(:user, :unverified) }
-  let(:verified_user) { create(:user, :verified) }
+  let(:verified_user) { create(:user, :with_verified) }
   let(:expired_code_user) { create(:user, :with_expired_code) }
 
   describe 'POST /users/verification' do

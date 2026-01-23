@@ -7,7 +7,7 @@ FactoryBot.define do
     verification_code { rand.to_s[2..7] }
     verification_sent_at { Time.current }
 
-    trait :verified do
+    trait :with_verified do
       verified { true }
       verified_at { Time.current }
       verification_code { nil }

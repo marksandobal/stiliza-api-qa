@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     mount Rswag::Api::Engine => "/api-docs"
   end
 
+  # Devise routes
   devise_for :users,
     defaults: { format: :json },
     controllers: {
@@ -29,6 +30,12 @@ Rails.application.routes.draw do
   namespace :users do
     post "verification" => "verification#verify"
     post "resend_verification", to: "verification#resend"
+  end
+
+  namespace :api do
+    scope module: :v1, constraints: ApiVersionConstraint.new(version: 1), defaults: { format: :json } do
+      resources :studios, only: [:index, :show, :create, :update]
+    end
   end
 
   # Defines the root path route ("/")

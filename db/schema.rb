@@ -10,9 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_13_035153) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_19_225428) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "companies", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -32,12 +60,32 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_13_035153) do
     t.index ["user_id"], name: "index_company_users_on_user_id"
   end
 
+  create_table "digital_channels", force: :cascade do |t|
+    t.integer "channel_type", null: false
+    t.datetime "created_at", null: false
+    t.bigint "studio_id", null: false
+    t.datetime "updated_at", null: false
+    t.string "value", null: false
+    t.index ["studio_id"], name: "index_digital_channels_on_studio_id"
+  end
+
   create_table "jwt_denylists", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "exp"
     t.string "jti"
     t.datetime "updated_at", null: false
     t.index ["jti"], name: "index_jwt_denylists_on_jti"
+  end
+
+  create_table "studios", force: :cascade do |t|
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.string "handle", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_studios_on_company_id"
+    t.index ["handle"], name: "index_studios_on_handle", unique: true
   end
 
   create_table "user_profiles", force: :cascade do |t|
@@ -77,7 +125,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_13_035153) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "company_users", "companies"
   add_foreign_key "company_users", "users"
+  add_foreign_key "digital_channels", "studios"
+  add_foreign_key "studios", "companies"
   add_foreign_key "user_profiles", "users", on_delete: :cascade
 end

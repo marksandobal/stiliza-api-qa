@@ -93,6 +93,124 @@ paths:
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
 
+  /api/studios:
+    get:
+      summary: Lists all studios for the current company
+      tags:
+      - Studios
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A list of studios
+          content:
+            application/vnd.stiliza-api.v1+json:
+              schema:
+                type: object
+                properties:
+                  studios:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Studio'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Company not found
+
+    post:
+      summary: Creates a new studio
+      tags:
+      - Studios
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/StudioCreate'
+      responses:
+        '201':
+          description: Studio created successfully
+          content:
+            application/vnd.stiliza-api.v1+json:
+              schema:
+                type: object
+                properties:
+                  studio:
+                    $ref: '#/components/schemas/Studio'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /api/studios/{id}:
+    get:
+      summary: Shows a specific studio
+      tags:
+      - Studios
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Studio details
+          content:
+            application/vnd.stiliza-api.v1+json:
+              schema:
+                type: object
+                properties:
+                  studio:
+                    $ref: '#/components/schemas/Studio'
+        '404':
+          description: Studio not found
+
+    patch:
+      summary: Updates a studio
+      tags:
+      - Studios
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/StudioUpdate'
+      responses:
+        '200':
+          description: Studio updated successfully
+          content:
+            application/vnd.stiliza-api.v1+json:
+              schema:
+                type: object
+                properties:
+                  studio:
+                    $ref: '#/components/schemas/Studio'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '404':
+          description: Studio not found
+
 servers:
 - url: https://stiliza-api-qa.onrender.com
   variables:
@@ -111,6 +229,16 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+ 
+  parameters:
+    AcceptHeader:
+      name: Accept
+      in: header
+      required: true
+      schema:
+        type: string
+        default: application/vnd.stiliza-api.v1+json
+      description: API version header
 
   schemas:
     User:
@@ -168,6 +296,47 @@ components:
       properties:
         errors:
           type: object
+    Studio:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        profile_thumb_url:
+          type: string
+          format: uri
+        banner_desktop_url:
+          type: string
+          format: uri
+        banner_mobile_url:
+          type: string
+          format: uri
+        qr_profile_url:
+          type: string
+          format: uri
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        digital_channels:
+          type: array
+          items:
+            $ref: '#/components/schemas/DigitalChannel'
+    DigitalChannel:
+      type: object
+      properties:
+        id:
+          type: integer
+        channel_type:
+          type: string
+          enum: [whatsapp, instagram, tiktok, facebook]
+        value:
+          type: string
 
   requestBodies:
     UserSignUp:
@@ -268,6 +437,63 @@ components:
               email:
                 type: string
                 example: user@mail.com
+    StudioCreate:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              studio[name]:
+                type: string
+              studio[description]:
+                type: string
+              studio[handle]:
+                type: string
+              studio[profile]:
+                type: string
+                format: binary
+              studio[banner]:
+                type: string
+                format: binary
+              studio[digital_channels_attributes]:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    channel_type:
+                      type: string
+                      enum: [whatsapp, instagram, tiktok, facebook]
+                    value:
+                      type: string
+    StudioUpdate:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              studio:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  digital_channels_attributes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        channel_type:
+                          type: string
+                          enum: [whatsapp, instagram, tiktok, facebook]
+                        value:
+                          type: string
+                        _destroy:
+                          type: boolean
 
   responses:
     Unauthorized:

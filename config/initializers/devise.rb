@@ -313,7 +313,7 @@ Devise.setup do |config|
 
   config.jwt do |jwt|
     jwt.secret = if Rails.env.test? || Rails.env.ci?
-      ENV["SECRET_KEY_BASE"] # valor fijo para tests/CI
+      ENV.fetch("SECRET_KEY_BASE", "secret_key_test") # valor fijo para tests/CI
     else
       Rails.application.credentials.fetch(:secret_key_base)
     end

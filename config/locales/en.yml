@@ -29,3 +29,12 @@
 
 en:
   hello: "Hello world"
+
+# Enum translations
+  enums:
+    digital_channel:
+      channel_type:
+        whatsapp: WhatsApp
+        instagram: Instagram
+        tiktok: TikTok
+        facebook: Facebook

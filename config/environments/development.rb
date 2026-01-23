@@ -28,6 +28,7 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
+  config.active_storage.variant_processor = :vips
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
@@ -37,7 +38,8 @@ Rails.application.configure do
 
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
-    config.action_mailer.delivery_method = :resend
+  config.action_controller.default_url_options = { host: "localhost", port: 3000 }
+  config.action_mailer.delivery_method = :resend
   config.action_mailer.resend_settings = {
     api_key: ENV.fetch("RESEND_API_KEY")
   }

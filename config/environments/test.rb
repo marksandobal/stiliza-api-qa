@@ -4,6 +4,7 @@
 # and recreated between test runs. Don't rely on the data there!
 
 Rails.application.configure do
+  config.secret_key_base = "una_llave_larga_y_aleatoria_de_al_menos_64_bits"
   # Settings specified here will take precedence over those in config/application.rb.
 
   # While tests run files are not watched, reloading is not necessary.
@@ -30,6 +31,7 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system in a temporary directory.
   config.active_storage.service = :test
+  config.active_storage.variant_processor = :mini_magick
 
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
@@ -38,6 +40,7 @@ Rails.application.configure do
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "example.com" }
+  config.action_controller.default_url_options = { host: "example.com" }
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
