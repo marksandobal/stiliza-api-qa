@@ -1,6 +1,6 @@
 # rubocop:disable Layout/ElseAlignment, Layout/EndAlignment
 
-sidekiq_config =  if Rails.env.production?
+sidekiq_config =  if Rails.env.production? || Rails.env.staging?
                     {
                       url: ENV["REDIS_TLS_URL"],
                       ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
