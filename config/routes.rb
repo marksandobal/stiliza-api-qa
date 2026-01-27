@@ -35,6 +35,10 @@ Rails.application.routes.draw do
   namespace :api do
     scope module: :v1, constraints: ApiVersionConstraint.new(version: 1), defaults: { format: :json } do
       resources :studios, only: [:index, :show, :create, :update]
+      resources :branches, only: [:index, :show, :create, :update, :destroy] do
+        resources :rooms, only: [:show, :create, :update, :destroy]
+        resources :schedules, only: [:show, :update]
+      end
     end
   end
 

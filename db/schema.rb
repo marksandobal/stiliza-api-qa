@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_19_225428) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_23_044529) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_225428) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "branches", force: :cascade do |t|
+    t.boolean "active", default: true
+    t.string "address"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.decimal "latitude"
+    t.decimal "longitude"
+    t.string "name"
+    t.string "phone"
+    t.bigint "studio_id", null: false
+    t.string "timezone"
+    t.datetime "updated_at", null: false
+    t.index ["studio_id"], name: "index_branches_on_studio_id"
   end
 
   create_table "companies", force: :cascade do |t|
@@ -75,6 +90,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_225428) do
     t.string "jti"
     t.datetime "updated_at", null: false
     t.index ["jti"], name: "index_jwt_denylists_on_jti"
+  end
+
+  create_table "rooms", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.bigint "branch_id", null: false
+    t.integer "capacity", null: false
+    t.datetime "created_at", null: false
+    t.jsonb "layout", default: {}, null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["branch_id"], name: "index_rooms_on_branch_id"
+  end
+
+  create_table "schedules", force: :cascade do |t|
+    t.boolean "active", default: true
+    t.bigint "branch_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "day_of_week", null: false
+    t.time "end_time", null: false
+    t.time "start_time", null: false
+    t.datetime "updated_at", null: false
+    t.index ["branch_id", "day_of_week", "start_time", "end_time"], name: "idx_on_branch_id_day_of_week_start_time_end_time_add335bba2", unique: true
+    t.index ["branch_id"], name: "index_schedules_on_branch_id"
   end
 
   create_table "studios", force: :cascade do |t|
@@ -127,9 +165,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_225428) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "branches", "studios"
   add_foreign_key "company_users", "companies"
   add_foreign_key "company_users", "users"
   add_foreign_key "digital_channels", "studios"
+  add_foreign_key "rooms", "branches"
+  add_foreign_key "schedules", "branches"
   add_foreign_key "studios", "companies"
   add_foreign_key "user_profiles", "users", on_delete: :cascade
 end

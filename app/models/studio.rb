@@ -17,6 +17,7 @@ class Studio < ApplicationRecord
   has_one_attached :qr_profile, dependent: :destroy
 
   belongs_to :company
+  has_many :branches, dependent: :destroy
   has_many :digital_channels, dependent: :destroy
 
   validates :name, presence: true

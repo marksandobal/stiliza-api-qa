@@ -17,6 +17,17 @@ class Api::V1::BaseController < ApplicationController
     end
   end
 
+  def set_current_studio!
+    @current_studio = @current_company.studios.find_by(id: current_studio_id)
+
+    if @current_studio.nil?
+      render json: {
+        error: "Studio not found or you do not have access",
+        suggestion: "Please select a valid studio from your list."
+      }, status: :not_found
+    end
+  end
+
   private
 
   def user_not_authorized
@@ -25,6 +36,10 @@ class Api::V1::BaseController < ApplicationController
 
   def current_company_id
     request.headers["Current-Company-Id"]
+  end
+
+  def current_studio_id
+    request.headers["Current-Studio-Id"]
   end
 
   # def authenticate_user!

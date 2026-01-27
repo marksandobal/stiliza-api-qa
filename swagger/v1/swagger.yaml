@@ -176,7 +176,7 @@ paths:
                   studio:
                     $ref: '#/components/schemas/Studio'
         '404':
-          description: Studio not found
+          $ref: '#/components/responses/NotFound'
 
     patch:
       summary: Updates a studio
@@ -209,7 +209,326 @@ paths:
         '422':
           $ref: '#/components/responses/UnprocessableEntity'
         '404':
-          description: Studio not found
+          $ref: '#/components/responses/NotFound'
+
+  /api/branches:
+    get:
+      summary: Lists all branches for the current studio
+      tags:
+      - Branches
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - $ref: '#/components/parameters/CurrentStudioId'
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A list of branches
+          content:
+            application/vnd.stiliza-api.v1+json:
+              schema:
+                type: object
+                properties:
+                  branches:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Branch'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      summary: Creates a new branch
+      tags:
+      - Branches
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - $ref: '#/components/parameters/CurrentStudioId'
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/BranchCreate'
+      responses:
+        '201':
+          description: Branch created successfully
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /api/branches/{id}:
+    get:
+      summary: Shows a specific branch
+      tags:
+      - Branches
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - $ref: '#/components/parameters/CurrentStudioId'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Branch details
+          content:
+            application/vnd.stiliza-api.v1+json:
+              schema:
+                type: object
+                properties:
+                  branch:
+                    $ref: '#/components/schemas/Branch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Updates a branch
+      tags:
+      - Branches
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - $ref: '#/components/parameters/CurrentStudioId'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/BranchUpdate'
+      responses:
+        '200':
+          description: Branch updated successfully
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Archives a branch
+      tags:
+      - Branches
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - $ref: '#/components/parameters/CurrentStudioId'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Branch archived successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/branches/{branch_id}/rooms:
+    post:
+      summary: Creates a new room in a branch
+      tags:
+      - Rooms
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - $ref: '#/components/parameters/CurrentStudioId'
+      - name: branch_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/RoomCreate'
+      responses:
+        '201':
+          description: Room created successfully
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /api/branches/{branch_id}/rooms/{id}:
+    get:
+      summary: Shows a specific room
+      tags:
+      - Rooms
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - $ref: '#/components/parameters/CurrentStudioId'
+      - name: branch_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Room details
+          content:
+            application/vnd.stiliza-api.v1+json:
+              schema:
+                type: object
+                properties:
+                  room:
+                    $ref: '#/components/schemas/Room'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Updates a room
+      tags:
+      - Rooms
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - $ref: '#/components/parameters/CurrentStudioId'
+      - name: branch_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/RoomUpdate'
+      responses:
+        '200':
+          description: Room updated successfully
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Archives a room
+      tags:
+      - Rooms
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - $ref: '#/components/parameters/CurrentStudioId'
+      - name: branch_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Room archived successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/branches/{branch_id}/schedules/{id}:
+    get:
+      summary: Shows a specific schedule
+      tags:
+      - Schedules
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - $ref: '#/components/parameters/CurrentStudioId'
+      - name: branch_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Schedule details
+          content:
+            application/vnd.stiliza-api.v1+json:
+              schema:
+                type: object
+                properties:
+                  schedule:
+                    $ref: '#/components/schemas/Schedule'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Updates a schedule
+      tags:
+      - Schedules
+      parameters:
+      - $ref: '#/components/parameters/AcceptHeader'
+      - $ref: '#/components/parameters/CurrentStudioId'
+      - name: branch_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Current-Company-Id
+        in: header
+        required: true
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/ScheduleUpdate'
+      responses:
+        '200':
+          description: Schedule updated successfully
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '404':
+          $ref: '#/components/responses/NotFound'
 
 servers:
 - url: https://stiliza-api-qa.onrender.com
@@ -222,6 +541,7 @@ servers:
     defaultHost:
       default: localhost:3000
       description: Local server
+
 
 components:
   securitySchemes:
@@ -570,6 +890,139 @@ components:
                       type: string
                     _destroy:
                       type: boolean
+              studio:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  digital_channels_attributes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        channel_type:
+                          type: string
+                          enum: [whatsapp, instagram, tiktok, facebook]
+                        value:
+                          type: string
+                        _destroy:
+                          type: boolean
+    BranchCreate:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              branch:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  phone:
+                    type: string
+                  email:
+                    type: string
+                  address:
+                    type: string
+                  latitude:
+                    type: number
+                  longitude:
+                    type: number
+                  timezone:
+                    type: string
+                  active:
+                    type: boolean
+                  rooms_attributes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Room'
+                  schedules_attributes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Schedule'
+    BranchUpdate:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              branch:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  phone:
+                    type: string
+                  email:
+                    type: string
+                  address:
+                    type: string
+                  latitude:
+                    type: number
+                  longitude:
+                    type: number
+                  timezone:
+                    type: string
+                  active:
+                    type: boolean
+    RoomCreate:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              room:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  capacity:
+                    type: integer
+                  layout:
+                    type: string
+    RoomUpdate:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              room:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  capacity:
+                    type: integer
+                  layout:
+                    type: string
+    ScheduleUpdate:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              schedule:
+                type: object
+                properties:
+                  day_of_week:
+                    type: integer
+                  start_time:
+                    type: string
+                    format: time
+                  end_time:
+                    type: string
+                    format: time
+                  active:
+                    type: boolean
 
   responses:
     Unauthorized:
