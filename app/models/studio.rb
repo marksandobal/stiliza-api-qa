@@ -21,7 +21,7 @@ class Studio < ApplicationRecord
   has_many :digital_channels, dependent: :destroy
 
   validates :name, presence: true
-
+  before_validation :build_handle
   # Validaciones para el Perfil (Foto redonda)
   validates :profile,
             attached: true,
@@ -44,17 +44,17 @@ class Studio < ApplicationRecord
               height: { min: 300, max: 10000 }
             }
 
-  validates :handle, uniqueness: true, allow_nil: true
+  validates :handle, uniqueness: { message: "('%{value}') is already taken" }
 
   accepts_nested_attributes_for :digital_channels, allow_destroy: true
-  before_create :build_handle
   after_commit :generate_qr_code, on: :create
   after_commit :regenerate_qr_code_if_handle_changed, on: :update
 
   private
 
   def build_handle
-    self.handle = name.downcase.parameterize
+    new_handle = handle.blank? ? name : handle
+    self.handle = new_handle.downcase.parameterize
   end
 
   def regenerate_qr_code_if_handle_changed

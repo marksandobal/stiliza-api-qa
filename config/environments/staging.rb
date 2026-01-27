@@ -60,6 +60,7 @@ Rails.application.configure do
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: ENV.fetch("DOMAIN_HOST"), protocol: "https" }
+  config.action_controller.default_url_options = { host: ENV.fetch("DOMAIN_HOST"), protocol: "https" }
   config.action_mailer.delivery_method = :resend
   config.action_mailer.resend_settings = {
     api_key: ENV.fetch("RESEND_API_KEY")
