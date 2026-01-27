@@ -1,0 +1,13 @@
+# Sidekiq configuration
+# https://github.com/sidekiq/sidekiq/wiki/Advanced-Options
+
+:concurrency: <%= ENV.fetch("SIDEKIQ_CONCURRENCY", 5) %>
+
+# Set timeout when shutting down (in seconds)
+:timeout: 25
+
+# Define queues and their priorities (higher = more important)
+:queues:
+  - [critical, 3]
+  - [default, 2]
+  - [low, 1]

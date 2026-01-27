@@ -20,6 +20,9 @@ class Api::V1::StudiosController < Api::V1::BaseController
     else
       render json: { errors: studio.errors.full_messages.join(", ") }, status: :unprocessable_entity
     end
+
+    rescue StandardError => e
+      render json: { errors: e.message }, status: :unprocessable_entity
   end
 
   def update

@@ -38,7 +38,7 @@ class Api::V1::StudioSerializer < ActiveModel::Serializer
 
   def qr_profile_url
     return nil unless object.qr_profile.attached?
-    rails_representation_url(object.qr_profile.variant(:standard), only_path: false)
+    rails_representation_url(object.qr_profile, only_path: false)
   end
 
   private

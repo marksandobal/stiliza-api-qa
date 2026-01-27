@@ -1,0 +1,6 @@
+# Procfile.dev - For local development with foreman/overmind
+# Run with: foreman start -f Procfile.dev
+# Or with overmind: overmind start -f Procfile.dev
+
+web: bin/rails server -p 3000
+sidekiq: bundle exec sidekiq -C config/sidekiq.yml

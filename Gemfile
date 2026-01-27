@@ -56,6 +56,9 @@ gem "ruby-vips"
 gem "active_storage_validations"
 # AWS S3 SDK for Active Storage
 gem "aws-sdk-s3", "~> 1"
+gem "rqrcode"
+# Redis with Sidekiq
+gem "sidekiq"
 
 group :development, :test do
   gem "dotenv-rails"

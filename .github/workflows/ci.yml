@@ -69,6 +69,8 @@ jobs:
       AWS_SECRET_ACCESS_KEY: access_key_id
       AWS_REGION: region_name
       AWS_BUCKET: bucket_name
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
     services:
       postgresql:
         image: postgres:15-alpine

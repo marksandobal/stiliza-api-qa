@@ -13,10 +13,8 @@ class Studio < ApplicationRecord
     attachable.variant :mobile, resize_to_fill: [800, 450], format: :webp, saver: { quality: 75 }, preprocessed: true
   end
 
-  # QR (Generalmente debe ser nítido, usamos limit para no perder calidad)
-  has_one_attached :qr_profile, dependent: :destroy do |attachable|
-    attachable.variant :standard, resize_to_limit: [500, 500], format: :png
-  end
+  # QR (Generado en formato SVG para máxima nitidez)
+  has_one_attached :qr_profile, dependent: :destroy
 
   belongs_to :company
   has_many :digital_channels, dependent: :destroy
@@ -49,10 +47,22 @@ class Studio < ApplicationRecord
 
   accepts_nested_attributes_for :digital_channels, allow_destroy: true
   before_create :build_handle
+  after_commit :generate_qr_code, on: :create
+  after_commit :regenerate_qr_code_if_handle_changed, on: :update
 
   private
 
   def build_handle
     self.handle = name.downcase.parameterize
+  end
+
+  def regenerate_qr_code_if_handle_changed
+    return unless saved_change_to_handle?
+
+    generate_qr_code
+  end
+
+  def generate_qr_code
+    CreateQrStudioWorker.perform_async(id)
   end
 end
