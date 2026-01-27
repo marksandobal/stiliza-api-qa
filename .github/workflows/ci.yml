@@ -65,6 +65,10 @@ jobs:
       ALLOWED_ORIGINS: localhost
       RESEND_API_KEY: test_secret_key_base_for_ci
       MAILER_SENDER: useremail@gmail.com
+      AWS_ACCESS_KEY_ID: code_id
+      AWS_SECRET_ACCESS_KEY: access_key_id
+      AWS_REGION: region_name
+      AWS_BUCKET: bucket_name
     services:
       postgresql:
         image: postgres:15-alpine

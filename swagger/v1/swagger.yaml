@@ -239,6 +239,13 @@ components:
         type: string
         default: application/vnd.stiliza-api.v1+json
       description: API version header
+    CurrentStudioId:
+      name: Current-Studio-Id
+      in: header
+      required: true
+      schema:
+        type: string
+      description: ID of the current studio
 
   schemas:
     User:
@@ -294,8 +301,17 @@ components:
     Error:
       type: object
       properties:
+        error:
+          type: string
         errors:
           type: object
+        suggestion:
+          type: string
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
     Studio:
       type: object
       properties:
@@ -337,6 +353,63 @@ components:
           enum: [whatsapp, instagram, tiktok, facebook]
         value:
           type: string
+    Branch:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        address:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        timezone:
+          type: string
+        active:
+          type: boolean
+        rooms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Room'
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Schedule'
+    Room:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        capacity:
+          type: integer
+        layout:
+          type: string
+    Schedule:
+      type: object
+      properties:
+        id:
+          type: integer
+        day_of_week:
+          type: integer
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        active:
+          type: boolean
+        branch_id:
+          type: integer
 
   requestBodies:
     UserSignUp:
@@ -469,35 +542,50 @@ components:
     StudioUpdate:
       required: true
       content:
-        application/json:
+        multipart/form-data:
           schema:
             type: object
             properties:
-              studio:
-                type: object
-                properties:
-                  name:
-                    type: string
-                  description:
-                    type: string
-                  digital_channels_attributes:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                        channel_type:
-                          type: string
-                          enum: [whatsapp, instagram, tiktok, facebook]
-                        value:
-                          type: string
-                        _destroy:
-                          type: boolean
+              studio[name]:
+                type: string
+              studio[description]:
+                type: string
+              studio[profile]:
+                type: string
+                format: binary
+              studio[banner]:
+                type: string
+                format: binary
+              studio[digital_channels_attributes]:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    channel_type:
+                      type: string
+                      enum: [whatsapp, instagram, tiktok, facebook]
+                    value:
+                      type: string
+                    _destroy:
+                      type: boolean
 
   responses:
     Unauthorized:
       description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
       content:
         application/json:
           schema:
@@ -508,6 +596,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    OK:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MessageResponse'
+    Created:
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MessageResponse'
 
 security:
 - bearer_auth: []

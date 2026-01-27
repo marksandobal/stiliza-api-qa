@@ -25,6 +25,8 @@ class Api::V1::StudiosController < Api::V1::BaseController
   def update
     @studio.update!(studio_params)
     render json: @studio, serializer: Api::V1::StudioSerializer, status: :ok
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.message }, status: :unprocessable_entity
   end
 
   private

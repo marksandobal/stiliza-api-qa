@@ -54,6 +54,8 @@ gem "image_processing", "~> 1.2"
 gem "ruby-vips"
 # Active Storage validation
 gem "active_storage_validations"
+# AWS S3 SDK for Active Storage
+gem "aws-sdk-s3", "~> 1"
 
 group :development, :test do
   gem "dotenv-rails"
